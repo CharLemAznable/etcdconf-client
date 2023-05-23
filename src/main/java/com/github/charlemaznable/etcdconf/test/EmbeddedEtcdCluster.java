@@ -3,11 +3,14 @@ package com.github.charlemaznable.etcdconf.test;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.launcher.Etcd;
 import io.etcd.jetcd.launcher.EtcdCluster;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 
 import static com.github.charlemaznable.etcdconf.elf.ByteSequenceElf.toByteSequence;
+import static lombok.AccessLevel.PRIVATE;
 
+@NoArgsConstructor(access = PRIVATE)
 public final class EmbeddedEtcdCluster {
 
     private static final EtcdCluster cluster

@@ -7,6 +7,7 @@ import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
 import lombok.val;
 
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import static com.github.charlemaznable.etcdconf.elf.ByteSequenceElf.fromByteSequence;
@@ -77,7 +78,10 @@ public final class EtcdConfigImpl implements EtcdConfig {
                     namespace.concat(toByteSequence(key))).get();
             if (getResponse.getCount() <= 0) return null;
             return fromByteSequence(getResponse.getKvs().get(0).getValue());
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (ExecutionException e) {
             return null;
         }
     }
