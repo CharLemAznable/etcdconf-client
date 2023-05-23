@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.charlemaznable</groupId>
+        <artifactId>char-dependencies</artifactId>
+        <version>2023.1.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>etcdconf-client</artifactId>
+    <version>2023.1.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Etcd Config Client</name>
+    <url>https://github.com/CharLemAznable/etcdconf-client</url>
+    <description>Use etcd as config service.</description>
+
+    <scm>
+        <connection>scm:git:https://github.com/CharLemAznable/etcdconf-client.git</connection>
+        <developerConnection>scm:git:https://github.com/CharLemAznable/etcdconf-client.git</developerConnection>
+        <url>https://github.com/CharLemAznable/etcdconf-client</url>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <properties>
+        <sonar.projectKey>CharLemAznable_etcdconf-client</sonar.projectKey>
+        <sonar.exclusions>
+            src/main/java/com/github/charlemaznable/etcdconf/client/DefaultEtcdClientBuilder.java,
+            src/main/java/com/github/charlemaznable/etcdconf/client/EtcdClientBuildService.java,
+            src/main/java/com/github/charlemaznable/etcdconf/elf/Functions.java
+        </sonar.exclusions>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.etcd</groupId>
+            <artifactId>jetcd-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.etcd</groupId>
+            <artifactId>jetcd-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>
