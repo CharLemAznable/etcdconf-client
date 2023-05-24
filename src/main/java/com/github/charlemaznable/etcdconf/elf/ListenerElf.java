@@ -36,7 +36,6 @@ public final class ListenerElf {
     private static EtcdConfigChangeListener.ChangeEvent changeEvent(WatchEvent event) {
         return new EtcdConfigChangeListener.ChangeEvent(
                 fromByteSequence(event.getKeyValue().getValue()),
-                fromByteSequence(event.getPrevKV().getValue()),
                 event.getEventType()
         );
     }

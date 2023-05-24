@@ -12,8 +12,7 @@ public interface EtcdConfigChangeListener {
     @Getter
     final class ChangeEvent {
 
-        private final String newValue;
-        private final String prevValue;
+        private final String value;
         private final WatchEvent.EventType eventType;
     }
 }

@@ -23,8 +23,7 @@ public class EtcdConfigListenerTest {
         EmbeddedEtcdCluster.addOrModifyProperty("test", "bbb", "bbb");
 
         EtcdConfigChangeListener aaaListener = event -> {
-            assertEquals("AAA", event.getNewValue());
-            assertEquals("aaa", event.getPrevValue());
+            assertEquals("AAA", event.getValue());
             assertEquals(WatchEvent.EventType.PUT, event.getEventType());
             counter.incrementAndGet();
         };
@@ -32,8 +31,7 @@ public class EtcdConfigListenerTest {
         testConfig.addChangeListener("aaa", aaaListener);
 
         EtcdConfigChangeListener bbbListener = event -> {
-            System.out.println("bbb new value:" + event.getNewValue());
-            assertEquals("bbb", event.getPrevValue());
+            assertEquals("", event.getValue());
             assertEquals(WatchEvent.EventType.DELETE, event.getEventType());
             counter.incrementAndGet();
         };
@@ -41,8 +39,7 @@ public class EtcdConfigListenerTest {
         testConfig.addChangeListener("bbb", bbbListener);
 
         EtcdConfigChangeListener cccListener = event -> {
-            assertEquals("ccc", event.getNewValue());
-            System.out.println("ccc prev value:" + event.getPrevValue());
+            assertEquals("ccc", event.getValue());
             assertEquals(WatchEvent.EventType.PUT, event.getEventType());
             counter.incrementAndGet();
         };
