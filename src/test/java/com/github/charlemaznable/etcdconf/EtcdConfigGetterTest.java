@@ -25,9 +25,13 @@ public class EtcdConfigGetterTest {
 
         val testConfig = EtcdConfigService.getConfig("test");
         assertEquals("etcd使用gRPC", testConfig.getString("some-str", "abc"));
+        assertEquals("abc", testConfig.getString("some-str2", "abc"));
         assertEquals(Integer.MAX_VALUE, testConfig.getInt("some-int", 123));
+        assertEquals(123, testConfig.getInt("some-str", 123));
         assertEquals(Long.MAX_VALUE, testConfig.getLong("some-long", 456L));
+        assertEquals(456L, testConfig.getLong("some-str", 456L));
         assertEquals(Short.MAX_VALUE, testConfig.getShort("some-short", (short) 12));
+        assertEquals((short) 12, testConfig.getShort("some-str", (short) 12));
         assertEquals(123.45f, testConfig.getFloat("some-float", 3.4f));
         assertEquals(6789.0, testConfig.getDouble("some-double", 5.6));
         assertEquals('a', testConfig.getByte("some-byte", (byte) 'b'));

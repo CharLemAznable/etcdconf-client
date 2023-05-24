@@ -18,10 +18,7 @@ public class EtcdConfigListenerTest {
         val counter = new AtomicInteger();
 
         EtcdConfigService.setUpTestMode();
-
         EmbeddedEtcdCluster.addOrModifyProperty("test", "aaa", "aaa");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "bbb", "bbb");
-
         EtcdConfigChangeListener aaaListener = event -> {
             assertEquals("AAA", event.getValue());
             assertEquals(WatchEvent.EventType.PUT, event.getEventType());
@@ -29,7 +26,12 @@ public class EtcdConfigListenerTest {
         };
         testConfig.addChangeListener("aaa", aaaListener);
         testConfig.addChangeListener("aaa", aaaListener);
+        EmbeddedEtcdCluster.addOrModifyProperty("test", "aaa", "AAA");
+        await().forever().until(() -> counter.get() == 2);
+        EtcdConfigService.tearDownTestMode();
 
+        EtcdConfigService.setUpTestMode();
+        EmbeddedEtcdCluster.addOrModifyProperty("test", "bbb", "bbb");
         EtcdConfigChangeListener bbbListener = event -> {
             assertEquals("", event.getValue());
             assertEquals(WatchEvent.EventType.DELETE, event.getEventType());
@@ -37,7 +39,11 @@ public class EtcdConfigListenerTest {
         };
         testConfig.addChangeListener("bbb", bbbListener);
         testConfig.addChangeListener("bbb", bbbListener);
+        EmbeddedEtcdCluster.deleteProperty("test", "bbb");
+        await().forever().until(() -> counter.get() == 4);
+        EtcdConfigService.tearDownTestMode();
 
+        EtcdConfigService.setUpTestMode();
         EtcdConfigChangeListener cccListener = event -> {
             assertEquals("ccc", event.getValue());
             assertEquals(WatchEvent.EventType.PUT, event.getEventType());
@@ -45,13 +51,12 @@ public class EtcdConfigListenerTest {
         };
         testConfig.addChangeListener("ccc", cccListener);
         testConfig.addChangeListener("ccc", cccListener);
-
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "aaa", "AAA");
-        EmbeddedEtcdCluster.deleteProperty("test", "bbb");
         EmbeddedEtcdCluster.addOrModifyProperty("test", "ccc", "ccc");
-
         await().forever().until(() -> counter.get() == 6);
-
         EtcdConfigService.tearDownTestMode();
+
+        testConfig.removeChangeListener(aaaListener);
+        testConfig.removeChangeListener(bbbListener);
+        testConfig.removeChangeListener(cccListener);
     }
 }
