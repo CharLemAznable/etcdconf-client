@@ -19,4 +19,8 @@ public interface EtcdConfig {
     boolean getBoolean(String key, boolean defaultValue);
 
     long getDuration(String key, long defaultValue);
+
+    void addChangeListener(String key, EtcdConfigChangeListener listener);
+
+    void removeChangeListener(EtcdConfigChangeListener listener);
 }

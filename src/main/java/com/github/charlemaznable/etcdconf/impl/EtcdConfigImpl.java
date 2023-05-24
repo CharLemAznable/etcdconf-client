@@ -1,6 +1,7 @@
 package com.github.charlemaznable.etcdconf.impl;
 
 import com.github.charlemaznable.etcdconf.EtcdConfig;
+import com.github.charlemaznable.etcdconf.EtcdConfigChangeListener;
 import com.github.charlemaznable.etcdconf.EtcdConfigService;
 import com.github.charlemaznable.etcdconf.elf.Functions;
 import io.etcd.jetcd.ByteSequence;
@@ -68,6 +69,16 @@ public final class EtcdConfigImpl implements EtcdConfig {
     @Override
     public long getDuration(String key, long defaultValue) {
         return getValue(key, defaultValue, Functions.TO_DURATION_FUNCTION);
+    }
+
+    @Override
+    public void addChangeListener(String key, EtcdConfigChangeListener listener) {
+        service.addChangeListener(namespace, toByteSequence(key), listener);
+    }
+
+    @Override
+    public void removeChangeListener(EtcdConfigChangeListener listener) {
+        service.removeChangeListener(listener);
     }
 
     private <T> T getValue(String key, T defaultValue, Function<String, T> parser) {
