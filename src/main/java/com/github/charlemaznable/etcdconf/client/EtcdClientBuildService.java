@@ -1,5 +1,6 @@
 package com.github.charlemaznable.etcdconf.client;
 
+import com.github.charlemaznable.etcdconf.MockEtcdServer;
 import lombok.val;
 
 import java.util.ServiceLoader;
@@ -9,7 +10,7 @@ public final class EtcdClientBuildService {
     private static final EtcdClientBuilder clientBuilder;
 
     static {
-        clientBuilder = findClientBuilder();
+        clientBuilder = new MockEtcdServer(findClientBuilder());
     }
 
     public static EtcdClientBuilder clientBuilder() {

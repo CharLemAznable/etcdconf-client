@@ -1,6 +1,5 @@
 package com.github.charlemaznable.etcdconf;
 
-import com.github.charlemaznable.etcdconf.test.EmbeddedEtcdCluster;
 import io.etcd.jetcd.watch.WatchEvent;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -14,49 +13,48 @@ public class EtcdConfigListenerTest {
 
     @Test
     public void testEtcdConfigListener() {
-        val testConfig = EtcdConfigService.getConfig("test");
         val counter = new AtomicInteger();
+        val testConfig = EtcdConfigService.getConfig("test");
 
-        EtcdConfigService.setUpTestMode();
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "aaa", "aaa");
-        EtcdConfigChangeListener aaaListener = event -> {
+        EtcdConfigChangeListener addListener = event -> {
+            assertEquals("aaa", event.getValue());
+            assertEquals(WatchEvent.EventType.PUT, event.getEventType());
+            counter.incrementAndGet();
+        };
+        testConfig.addChangeListener("aaa", addListener);
+        testConfig.addChangeListener("aaa", addListener);
+
+        MockEtcdServer.setUpMockServer();
+        MockEtcdServer.addOrModifyProperty("test", "aaa", "aaa");
+        await().forever().until(() -> counter.get() == 2);
+
+        testConfig.removeChangeListener(addListener);
+
+        EtcdConfigChangeListener modListener = event -> {
             assertEquals("AAA", event.getValue());
             assertEquals(WatchEvent.EventType.PUT, event.getEventType());
             counter.incrementAndGet();
         };
-        testConfig.addChangeListener("aaa", aaaListener);
-        testConfig.addChangeListener("aaa", aaaListener);
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "aaa", "AAA");
-        await().forever().until(() -> counter.get() == 2);
-        EtcdConfigService.tearDownTestMode();
+        testConfig.addChangeListener("aaa", modListener);
+        testConfig.addChangeListener("aaa", modListener);
 
-        EtcdConfigService.setUpTestMode();
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "bbb", "bbb");
-        EtcdConfigChangeListener bbbListener = event -> {
+        MockEtcdServer.addOrModifyProperty("test", "aaa", "AAA");
+        await().forever().until(() -> counter.get() == 4);
+
+        testConfig.removeChangeListener(modListener);
+
+        EtcdConfigChangeListener delListener = event -> {
             assertEquals("", event.getValue());
             assertEquals(WatchEvent.EventType.DELETE, event.getEventType());
             counter.incrementAndGet();
         };
-        testConfig.addChangeListener("bbb", bbbListener);
-        testConfig.addChangeListener("bbb", bbbListener);
-        EmbeddedEtcdCluster.deleteProperty("test", "bbb");
-        await().forever().until(() -> counter.get() == 4);
-        EtcdConfigService.tearDownTestMode();
+        testConfig.addChangeListener("aaa", delListener);
+        testConfig.addChangeListener("aaa", delListener);
 
-        EtcdConfigService.setUpTestMode();
-        EtcdConfigChangeListener cccListener = event -> {
-            assertEquals("ccc", event.getValue());
-            assertEquals(WatchEvent.EventType.PUT, event.getEventType());
-            counter.incrementAndGet();
-        };
-        testConfig.addChangeListener("ccc", cccListener);
-        testConfig.addChangeListener("ccc", cccListener);
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "ccc", "ccc");
+        MockEtcdServer.deleteProperty("test", "aaa");
         await().forever().until(() -> counter.get() == 6);
-        EtcdConfigService.tearDownTestMode();
+        MockEtcdServer.tearDownMockServer();
 
-        testConfig.removeChangeListener(aaaListener);
-        testConfig.removeChangeListener(bbbListener);
-        testConfig.removeChangeListener(cccListener);
+        testConfig.removeChangeListener(delListener);
     }
 }

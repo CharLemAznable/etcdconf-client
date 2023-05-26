@@ -1,6 +1,5 @@
 package com.github.charlemaznable.etcdconf;
 
-import com.github.charlemaznable.etcdconf.test.EmbeddedEtcdCluster;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -11,19 +10,29 @@ public class EtcdConfigGetterTest {
 
     @Test
     public void testEtcdConfigGetter() {
-        EtcdConfigService.setUpTestMode();
-
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-str", "etcd使用gRPC");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-int", Integer.toString(Integer.MAX_VALUE));
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-long", Long.toString(Long.MAX_VALUE));
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-short", Short.toString(Short.MAX_VALUE));
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-float", "123.45");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-double", "6789.0");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-byte", "97");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-bool", "true");
-        EmbeddedEtcdCluster.addOrModifyProperty("test", "some-duration", "3S300");
-
         val testConfig = EtcdConfigService.getConfig("test");
+        assertEquals("abc", testConfig.getString("some-str", "abc"));
+        assertEquals(123, testConfig.getInt("some-int", 123));
+        assertEquals(456L, testConfig.getLong("some-long", 456L));
+        assertEquals((short) 12, testConfig.getShort("some-short", (short) 12));
+        assertEquals(3.4f, testConfig.getFloat("some-float", 3.4f));
+        assertEquals(5.6, testConfig.getDouble("some-double", 5.6));
+        assertEquals((byte) 'b', testConfig.getByte("some-byte", (byte) 'b'));
+        assertTrue(testConfig.getBoolean("some-bool", true));
+        assertEquals(1000, testConfig.getDuration("some-duration", 1000));
+
+        MockEtcdServer.setUpMockServer();
+
+        MockEtcdServer.addOrModifyProperty("test", "some-str", "etcd使用gRPC");
+        MockEtcdServer.addOrModifyProperty("test", "some-int", Integer.toString(Integer.MAX_VALUE));
+        MockEtcdServer.addOrModifyProperty("test", "some-long", Long.toString(Long.MAX_VALUE));
+        MockEtcdServer.addOrModifyProperty("test", "some-short", Short.toString(Short.MAX_VALUE));
+        MockEtcdServer.addOrModifyProperty("test", "some-float", "123.45");
+        MockEtcdServer.addOrModifyProperty("test", "some-double", "6789.0");
+        MockEtcdServer.addOrModifyProperty("test", "some-byte", "97");
+        MockEtcdServer.addOrModifyProperty("test", "some-bool", "true");
+        MockEtcdServer.addOrModifyProperty("test", "some-duration", "3S300");
+
         assertEquals("etcd使用gRPC", testConfig.getString("some-str", "abc"));
         assertEquals("abc", testConfig.getString("some-str2", "abc"));
         assertEquals(Integer.MAX_VALUE, testConfig.getInt("some-int", 123));
@@ -38,16 +47,16 @@ public class EtcdConfigGetterTest {
         assertTrue(testConfig.getBoolean("some-bool", false));
         assertEquals(3300, testConfig.getDuration("some-duration", 1000));
 
-        EmbeddedEtcdCluster.deleteProperty("test", "some-str");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-int");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-long");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-short");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-float");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-double");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-byte");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-bool");
-        EmbeddedEtcdCluster.deleteProperty("test", "some-duration");
+        MockEtcdServer.deleteProperty("test", "some-str");
+        MockEtcdServer.deleteProperty("test", "some-int");
+        MockEtcdServer.deleteProperty("test", "some-long");
+        MockEtcdServer.deleteProperty("test", "some-short");
+        MockEtcdServer.deleteProperty("test", "some-float");
+        MockEtcdServer.deleteProperty("test", "some-double");
+        MockEtcdServer.deleteProperty("test", "some-byte");
+        MockEtcdServer.deleteProperty("test", "some-bool");
+        MockEtcdServer.deleteProperty("test", "some-duration");
 
-        EtcdConfigService.tearDownTestMode();
+        MockEtcdServer.tearDownMockServer();
     }
 }

@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import static com.github.charlemaznable.etcdconf.elf.ByteSequenceElf.fromByteSequence;
 import static com.github.charlemaznable.etcdconf.elf.ByteSequenceElf.toByteSequence;
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
@@ -73,7 +74,8 @@ public final class EtcdConfigImpl implements EtcdConfig {
 
     @Override
     public void addChangeListener(String key, EtcdConfigChangeListener listener) {
-        service.addChangeListener(namespace, toByteSequence(key), listener);
+        service.addChangeListener(namespace
+                .concat(requireNonNull(toByteSequence(key))), listener);
     }
 
     @Override
@@ -82,7 +84,8 @@ public final class EtcdConfigImpl implements EtcdConfig {
     }
 
     private <T> T getValue(String key, T defaultValue, Function<String, T> parser) {
-        val value = fromByteSequence(service.getValue(namespace, toByteSequence(key)));
+        val value = fromByteSequence(service.getValue(namespace
+                .concat(requireNonNull(toByteSequence(key)))));
         if (isBlank(value)) return defaultValue;
         try {
             return parser.apply(value);
