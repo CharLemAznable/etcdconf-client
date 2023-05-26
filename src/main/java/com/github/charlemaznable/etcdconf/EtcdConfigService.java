@@ -53,6 +53,7 @@ public final class EtcdConfigService {
     static void reset() {
         synchronized (instance) {
             instance.client = null;
+            instance.getClient();
         }
     }
 }
