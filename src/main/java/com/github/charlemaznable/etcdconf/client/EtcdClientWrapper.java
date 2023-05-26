@@ -33,9 +33,9 @@ public final class EtcdClientWrapper {
     }
 
     public Optional<ByteSequence> get(ByteSequence key) {
-        return Optional.ofNullable(this.client).flatMap(client -> {
+        return Optional.ofNullable(this.client).map(Client::getKVClient).flatMap(kv -> {
             try {
-                val getResponse = client.getKVClient().get(key).get();
+                val getResponse = kv.get(key).get();
                 if (getResponse.getCount() <= 0) return Optional.empty();
                 return Optional.ofNullable(getResponse.getKvs().get(0).getValue());
             } catch (InterruptedException e) {
@@ -49,8 +49,8 @@ public final class EtcdClientWrapper {
 
     @SuppressWarnings("UnusedReturnValue")
     public Optional<Watch.Watcher> watch(ByteSequence key, EtcdConfigChangeListener listener) {
-        return Optional.ofNullable(this.client).flatMap(client -> {
-            val watcher = client.getWatchClient().watch(key, listener(listener));
+        return Optional.ofNullable(this.client).map(Client::getWatchClient).flatMap(watch -> {
+            val watcher = watch.watch(key, listener(listener));
             listeningWatchers.compute(listener, (k, v) -> addItemToList(v, watcher));
             return Optional.of(watcher);
         });
