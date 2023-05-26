@@ -1,5 +1,7 @@
 package com.github.charlemaznable.etcdconf.elf;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +15,7 @@ public interface Functions {
     Function<String, Float> TO_FLOAT_FUNCTION = Float::parseFloat;
     Function<String, Double> TO_DOUBLE_FUNCTION = Double::parseDouble;
     Function<String, Byte> TO_BYTE_FUNCTION = Byte::parseByte;
-    Function<String, Boolean> TO_BOOLEAN_FUNCTION = Boolean::parseBoolean;
+    Function<String, Boolean> TO_BOOLEAN_FUNCTION = BooleanUtils::toBoolean;
     Function<String, Long> TO_DURATION_FUNCTION = DurationParser.INSTANCE::parseToMillis;
 
     enum DurationParser {
