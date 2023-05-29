@@ -43,11 +43,11 @@ public interface Functions {
                 String secondMatch = matcher.group(4);
                 String fractionMatch = matcher.group(5);
                 if (dayMatch != null || hourMatch != null || minuteMatch != null || secondMatch != null || fractionMatch != null) {
-                    int daysAsMilliSecs = parseNumber(dayMatch, MILLIS_PER_DAY);
-                    int hoursAsMilliSecs = parseNumber(hourMatch, MILLIS_PER_HOUR);
-                    int minutesAsMilliSecs = parseNumber(minuteMatch, MILLIS_PER_MINUTE);
-                    int secondsAsMilliSecs = parseNumber(secondMatch, MILLIS_PER_SECOND);
-                    int milliseconds = parseNumber(fractionMatch, 1);
+                    long daysAsMilliSecs = parseNumber(dayMatch, MILLIS_PER_DAY);
+                    long hoursAsMilliSecs = parseNumber(hourMatch, MILLIS_PER_HOUR);
+                    long minutesAsMilliSecs = parseNumber(minuteMatch, MILLIS_PER_MINUTE);
+                    long secondsAsMilliSecs = parseNumber(secondMatch, MILLIS_PER_SECOND);
+                    long milliseconds = parseNumber(fractionMatch, 1);
 
                     return daysAsMilliSecs + hoursAsMilliSecs + minutesAsMilliSecs + secondsAsMilliSecs + milliseconds;
                 }
@@ -56,12 +56,12 @@ public interface Functions {
         }
 
 
-        private static int parseNumber(String parsed, int multiplier) {
+        private static long parseNumber(String parsed, int multiplier) {
             // regex limits to [0-9]+
             if (parsed == null || parsed.trim().isEmpty()) {
-                return 0;
+                return 0L;
             }
-            return Integer.parseInt(parsed) * multiplier;
+            return Long.parseLong(parsed) * multiplier;
         }
     }
 }
