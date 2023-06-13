@@ -20,3 +20,25 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=CharLemAznable_etcdconf-client&metric=ncloc)](https://sonarcloud.io/dashboard?id=CharLemAznable_etcdconf-client)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=CharLemAznable_etcdconf-client&metric=coverage)](https://sonarcloud.io/dashboard?id=CharLemAznable_etcdconf-client)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=CharLemAznable_etcdconf-client&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=CharLemAznable_etcdconf-client)
+
+Use etcd as config service.
+
+##### Maven Dependency
+
+```xml
+<dependency>
+  <groupId>com.github.charlemaznable</groupId>
+  <artifactId>etcdconf-client</artifactId>
+  <version>2023.2.0</version>
+</dependency>
+```
+
+##### Maven Dependency SNAPSHOT
+
+```xml
+<dependency>
+  <groupId>com.github.charlemaznable</groupId>
+  <artifactId>etcdconf-client</artifactId>
+  <version>2023.2.1-SNAPSHOT</version>
+</dependency>
+```
