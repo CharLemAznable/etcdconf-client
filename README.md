@@ -29,7 +29,7 @@ Use etcd as config service.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>etcdconf-client</artifactId>
-  <version>2023.2.2</version>
+  <version>2024.0.0</version>
 </dependency>
 ```
 
@@ -39,6 +39,6 @@ Use etcd as config service.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>etcdconf-client</artifactId>
-  <version>2024.0.0-SNAPSHOT</version>
+  <version>2024.0.1-SNAPSHOT</version>
 </dependency>
 ```
